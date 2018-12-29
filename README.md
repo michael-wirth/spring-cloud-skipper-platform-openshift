@@ -20,7 +20,7 @@ Simply add this platform as a dependency to your Skipper server project:
         <dependency>
             <groupId>io.switchbit</groupId>
             <artifactId>spring-cloud-skipper-platform-openshift</artifactId>
-            <version>1.0.0.BUILD-SNAPSHOT</version>
+            <version>2.0.0.BUILD-SNAPSHOT</version>
         </dependency>
         ...
     </dependencies>        

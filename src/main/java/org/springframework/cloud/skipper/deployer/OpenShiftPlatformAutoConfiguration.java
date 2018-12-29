@@ -68,14 +68,4 @@ public class OpenShiftPlatformAutoConfiguration {
 
 		return new Platform("OpenShift", deployers);
 	}
-
-	@Bean
-	public MavenResourceJarExtractor mavenResourceJarExtractor() {
-		return new MavenResourceJarExtractor();
-	}
-
-	@Bean
-	public ResourceHash resourceHash() {
-		return new ResourceHash();
-	}
 }
