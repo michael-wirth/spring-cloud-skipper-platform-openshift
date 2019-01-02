@@ -57,7 +57,7 @@ public class OpenShiftPlatformAutoConfiguration {
 
 			ResourceAwareOpenShiftAppDeployer appDeployer = new ResourceAwareOpenShiftAppDeployer(openShiftAppDeployer,
 					mavenOpenShiftAppDeployer);
-			Deployer deployer = new Deployer(entry.getKey(), "openshfit", appDeployer);
+			Deployer deployer = new Deployer(entry.getKey(), "openshift", appDeployer);
 			deployer.setDescription(String.format("master url = [%s], namespace = [%s], api version = [%s]",
 					openShiftClient.getMasterUrl(), openShiftClient.getNamespace(),
 					openShiftClient.getApiVersion()));
