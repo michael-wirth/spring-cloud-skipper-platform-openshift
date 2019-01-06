@@ -3,120 +3,111 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--<parent>-->
-    <!--<artifactId>spring-cloud-skipper-parent</artifactId>-->
-    <!--<groupId>org.springframework.cloud</groupId>-->
-    <!--<version>2.0.0.BUILD-SNAPSHOT</version>-->
-    <!--</parent>-->
-
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
         <version>2.1.0.RC3</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-skipper-platform-openshift</artifactId>
+
+    <artifactId>spring-cloud-skipper-openshift</artifactId>
     <version>2.0.0.BUILD-SNAPSHOT</version>
-    <name>Spring Cloud Skipper :: OpenShift Platform</name>
+    <name>Spring Cloud Skipper - OpenShift</name>
+    <packaging>pom</packaging>
+
+    <scm>
+        <connection>scm:git:git@github.com:donovanmuller/spring-cloud-dataflow-server-openshift.git</connection>
+        <developerConnection>scm:git:git@github.com:donovanmuller/spring-cloud-dataflow-server-openshift.git</developerConnection>
+        <url>https://github.com/donovanmuller/spring-cloud-dataflow-server-openshift</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-switchbit-public</id>
+            <url>
+                https://api.bintray.com/maven/donovanmuller/switchbit-public/spring-cloud-dataflow-server-openshift/;publish=1
+            </url>
+        </repository>
+    </distributionManagement>
+
+    <modules>
+        <module>spring-cloud-skipper-platform-openshift</module>
+        <module>spring-cloud-skipper-server-openshift</module>
+    </modules>
 
     <properties>
-        <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.RC2</spring-cloud.version>
+        <docker.image.prefix>donovanmuller</docker.image.prefix>
+        <kubernetes-client.version>4.1.0</kubernetes-client.version>
         <spring-cloud-deployer-openshift.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-deployer-openshift.version>
-        <!--<checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>-->
+        <spring-cloud-kubernetes.version>1.0.0.RC2</spring-cloud-kubernetes.version>
+        <spring-cloud-skipper-dependencies.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-skipper-dependencies.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-parent</artifactId>-->
-            <!--<version>2.1.1.RELEASE</version>-->
-            <!--<type>pom</type>-->
-            <!--<scope>import</scope>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-dependencies</artifactId>-->
-            <!--<version>${spring-cloud.version}</version>-->
-            <!--<type>pom</type>-->
-            <!--<scope>import</scope>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-skipper-dependencies</artifactId>
+                <version>${spring-cloud-skipper-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>io.fabric8</groupId>
                 <artifactId>kubernetes-client-bom</artifactId>
-                <version>4.1.0</version>
+                <version>${kubernetes-client.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-skipper-dependencies</artifactId>
-                <version>2.0.0.BUILD-SNAPSHOT</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <artifactId>spring-cloud-skipper-platform-openshift</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-kubernetes-all</artifactId>
+                <version>${spring-cloud-kubernetes.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>kubernetes-client</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-deployer-openshift</artifactId>
+                <version>${spring-cloud-deployer-openshift.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-skipper-server-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-deployer-openshift</artifactId>
-            <version>${spring-cloud-deployer-openshift.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
-
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>META-INF/spring.factories</include>
-                </includes>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-checkstyle-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<configLocation>etc/checkstyle/checkstyle.xml</configLocation>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                     <headerLocation>checkstyle-header.txt</headerLocation>
-                    <propertyExpansion>checkstyle.build.directory=/home/miwr/development/projects/scdf/spring-cloud-skipper-platform-openshift/target</propertyExpansion>
                     <consoleOutput>true</consoleOutput>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <failsOnError>false</failsOnError>
                     <failOnViolation>false</failOnViolation>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -171,5 +162,56 @@
                 </pluginRepository>
             </pluginRepositories>
         </profile>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                            <skipDeploy>true</skipDeploy>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <repositories>
+                <repository>
+                    <id>bintray-donovanmuller-switchbit-public</id>
+                    <name>bintray</name>
+                    <url>https://dl.bintray.com/donovanmuller/switchbit-public</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
     </profiles>
+
 </project>

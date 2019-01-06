@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: spring-cloud-skipper-server-openshift
+
+  cloud:
+    config:
+      enabled: false
+
