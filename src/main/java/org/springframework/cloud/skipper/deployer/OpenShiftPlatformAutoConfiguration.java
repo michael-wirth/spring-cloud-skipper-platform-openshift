@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.cloud.skipper.deployer;
 
 import java.util.ArrayList;
@@ -26,39 +42,45 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Spring Cloud Skipper autoconfiguration for the Openshift platform.
+ *
  * @author Donovan Muller
+ * @author Michael Wirth
  */
 @Configuration
 @EnableConfigurationProperties(OpenShiftPlatformProperties.class)
 public class OpenShiftPlatformAutoConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(OpenShiftPlatformAutoConfiguration.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(OpenShiftPlatformAutoConfiguration.class);
 
 	@Bean
 	public Platform deployers(OpenShiftPlatformProperties platformProperties,
-			MavenResourceJarExtractor mavenResourceJarExtractor, MavenProperties mavenProperties,
-			ResourceHash resourceHash) {
+			MavenResourceJarExtractor mavenResourceJarExtractor,
+			MavenProperties mavenProperties, ResourceHash resourceHash) {
 		List<Deployer> deployers = new ArrayList<>();
-		Map<String, OpenShiftDeployerProperties> openShiftDeployerPropertiesMap = platformProperties.getAccounts();
-		for (Map.Entry<String, OpenShiftDeployerProperties> entry : openShiftDeployerPropertiesMap.entrySet()) {
+		Map<String, OpenShiftDeployerProperties> openShiftDeployerPropertiesMap = platformProperties
+				.getAccounts();
+		for (Map.Entry<String, OpenShiftDeployerProperties> entry : openShiftDeployerPropertiesMap
+				.entrySet()) {
 			OpenShiftDeployerProperties properties = entry.getValue();
-			OpenShiftClient openShiftClient = new DefaultOpenShiftClient().inNamespace(properties.getNamespace());
+			OpenShiftClient openShiftClient = new DefaultOpenShiftClient()
+					.inNamespace(properties.getNamespace());
 			ContainerFactory containerFactory = new OpenShiftContainerFactory(properties,
 					new VolumeMountFactory(properties) {
 					});
 
-			OpenShiftAppDeployer openShiftAppDeployer = new OpenShiftAppDeployer(properties, openShiftClient,
-					containerFactory);
-			MavenOpenShiftAppDeployer mavenOpenShiftAppDeployer = new MavenOpenShiftAppDeployer(properties,
-					openShiftClient, containerFactory,
-					mavenResourceJarExtractor,
-					mavenProperties,
-					resourceHash);
+			OpenShiftAppDeployer openShiftAppDeployer = new OpenShiftAppDeployer(
+					properties, openShiftClient, containerFactory);
+			MavenOpenShiftAppDeployer mavenOpenShiftAppDeployer = new MavenOpenShiftAppDeployer(
+					properties, openShiftClient, containerFactory,
+					mavenResourceJarExtractor, mavenProperties, resourceHash);
 
-			ResourceAwareOpenShiftAppDeployer appDeployer = new ResourceAwareOpenShiftAppDeployer(openShiftAppDeployer,
-					mavenOpenShiftAppDeployer);
+			ResourceAwareOpenShiftAppDeployer appDeployer = new ResourceAwareOpenShiftAppDeployer(
+					openShiftAppDeployer, mavenOpenShiftAppDeployer);
 			Deployer deployer = new Deployer(entry.getKey(), "openshift", appDeployer);
-			deployer.setDescription(String.format("master url = [%s], namespace = [%s], api version = [%s]",
+			deployer.setDescription(String.format(
+					"master url = [%s], namespace = [%s], api version = [%s]",
 					openShiftClient.getMasterUrl(), openShiftClient.getNamespace(),
 					openShiftClient.getApiVersion()));
 
@@ -68,4 +90,5 @@ public class OpenShiftPlatformAutoConfiguration {
 
 		return new Platform("OpenShift", deployers);
 	}
+
 }

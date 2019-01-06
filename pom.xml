@@ -3,24 +3,57 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!--<parent>-->
+    <!--<artifactId>spring-cloud-skipper-parent</artifactId>-->
+    <!--<groupId>org.springframework.cloud</groupId>-->
+    <!--<version>2.0.0.BUILD-SNAPSHOT</version>-->
+    <!--</parent>-->
+
     <parent>
-        <artifactId>spring-cloud-skipper-parent</artifactId>
         <groupId>org.springframework.cloud</groupId>
-        <version>2.0.0.BUILD-SNAPSHOT</version>
+        <artifactId>spring-cloud-build</artifactId>
+        <version>2.1.0.RC3</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-skipper-platform-openshift</artifactId>
+    <version>2.0.0.BUILD-SNAPSHOT</version>
     <name>Spring Cloud Skipper :: OpenShift Platform</name>
 
     <properties>
+        <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
+        <spring-cloud.version>Greenwich.RC2</spring-cloud.version>
         <spring-cloud-deployer-openshift.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-deployer-openshift.version>
+        <!--<checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>-->
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-parent</artifactId>-->
+            <!--<version>2.1.1.RELEASE</version>-->
+            <!--<type>pom</type>-->
+            <!--<scope>import</scope>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-dependencies</artifactId>-->
+            <!--<version>${spring-cloud.version}</version>-->
+            <!--<type>pom</type>-->
+            <!--<scope>import</scope>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>io.fabric8</groupId>
                 <artifactId>kubernetes-client-bom</artifactId>
                 <version>4.1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-skipper-dependencies</artifactId>
+                <version>2.0.0.BUILD-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -59,18 +92,33 @@
                 </includes>
             </resource>
         </resources>
-    </build>
 
-    <repositories>
-        <repository>
-            <id>bintray-donovanmuller-switchbit-public</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/donovanmuller/switchbit-public</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+        <plugins>
+            <plugin>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+            </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-checkstyle-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<configLocation>etc/checkstyle/checkstyle.xml</configLocation>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <headerLocation>checkstyle-header.txt</headerLocation>
+                    <propertyExpansion>checkstyle.build.directory=/home/miwr/development/projects/scdf/spring-cloud-skipper-platform-openshift/target</propertyExpansion>
+                    <consoleOutput>true</consoleOutput>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                    <failsOnError>false</failsOnError>
+                    <failOnViolation>false</failOnViolation>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
