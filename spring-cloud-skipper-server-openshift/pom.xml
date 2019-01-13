@@ -8,7 +8,6 @@
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-skipper-openshift</artifactId>
         <version>2.0.0.BUILD-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <name>Spring Cloud Skipper - OpenShift Server</name>
@@ -75,12 +74,36 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.28.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${docker.image.prefix}/${project.artifactId}-f8</name>
+                            <build>
+                                <from>openjdk:8-alpine</from>
+                                <volumes>
+                                    <volume>/tmp</volume>
+                                </volumes>
+                                <entryPoint>
+                                    exec java $JAVA_OPTS -Djava.security.egd=file:/dev/urandom -jar /maven/${artifactId}.jar
+                                </entryPoint>
+                                <assembly>
+                                    <descriptor>assembly.xml</descriptor>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>1.0.0-rc1</version>
+                <version>1.0.0-rc2</version>
                 <configuration>
                     <from>
-                        <image>springcloud/openjdk:latest</image>
+                        <image>openjdk:8-alpine</image>
                     </from>
                     <to>
                         <image>${docker.image.prefix}/${project.artifactId}</image>

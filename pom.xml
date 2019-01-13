@@ -24,9 +24,7 @@
     <distributionManagement>
         <repository>
             <id>bintray-switchbit-public</id>
-            <url>
-                https://api.bintray.com/maven/donovanmuller/switchbit-public/spring-cloud-dataflow-server-openshift/;publish=1
-            </url>
+            <url>https://api.bintray.com/maven/donovanmuller/switchbit-public/spring-cloud-dataflow-server-openshift/;publish=1</url>
         </repository>
     </distributionManagement>
 
@@ -85,21 +83,28 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>io.spring.javaformat</groupId>
-                <artifactId>spring-javaformat-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
-                    <headerLocation>checkstyle-header.txt</headerLocation>
-                    <consoleOutput>true</consoleOutput>
-                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
-                    <failsOnError>false</failsOnError>
-                    <failOnViolation>false</failOnViolation>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<failOnViolation>true</failOnViolation>
+					<violationSeverity>warning</violationSeverity>
+					<includeTestSourceDirectory>false</includeTestSourceDirectory>
+					<configLocation>io/spring/javaformat/checkstyle/checkstyle.xml</configLocation>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>8.16</version>
+					</dependency>
+				</dependencies>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
