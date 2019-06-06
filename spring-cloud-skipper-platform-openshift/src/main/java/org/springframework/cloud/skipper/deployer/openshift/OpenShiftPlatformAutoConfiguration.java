@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.cloud.skipper.deployer;
+package org.springframework.cloud.skipper.deployer.openshift;
 
 import java.util.ArrayList;
 import java.util.List;

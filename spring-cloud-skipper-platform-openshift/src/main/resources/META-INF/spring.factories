@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-   org.springframework.cloud.skipper.deployer.OpenShiftPlatformAutoConfiguration
+   org.springframework.cloud.skipper.deployer.openshift.OpenShiftPlatformAutoConfiguration

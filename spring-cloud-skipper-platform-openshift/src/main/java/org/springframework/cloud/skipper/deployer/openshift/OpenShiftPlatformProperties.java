@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.cloud.skipper.deployer;
+package org.springframework.cloud.skipper.deployer.openshift;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,14 +31,14 @@ import org.springframework.cloud.deployer.spi.openshift.OpenShiftDeployerPropert
 @ConfigurationProperties("spring.cloud.skipper.server.platform.openshift")
 public class OpenShiftPlatformProperties {
 
-	private Map<String, OpenShiftDeployerProperties> accounts = new LinkedHashMap<>();
+    private Map<String, OpenShiftDeployerProperties> accounts = new LinkedHashMap<>();
 
-	public Map<String, OpenShiftDeployerProperties> getAccounts() {
-		return this.accounts;
-	}
+    public Map<String, OpenShiftDeployerProperties> getAccounts() {
+        return this.accounts;
+    }
 
-	public void setAccounts(Map<String, OpenShiftDeployerProperties> accounts) {
-		this.accounts = accounts;
-	}
+    public void setAccounts(Map<String, OpenShiftDeployerProperties> accounts) {
+        this.accounts = accounts;
+    }
 
 }
